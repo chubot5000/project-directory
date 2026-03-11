@@ -6,7 +6,7 @@ const GITHUB_USER = 'chubot5000'
 // Known Vercel mappings — add new ones here as needed
 const VERCEL_MAP = {
   'usdai-landing': { url: 'https://usdai-landing-main.vercel.app', domain: null },
-  'wtgs-site': { url: 'https://sleepnebula.com', domain: 'sleepnebula.com' },
+  'sleepnebula': { url: 'https://sleepnebula.com', domain: 'sleepnebula.com' },
   'baez': { url: 'https://baez-xi.vercel.app', domain: null },
   'drive-directory': { url: 'https://drive-directory.vercel.app', domain: null },
   'permian-labs': { url: 'https://permian-labs.vercel.app', domain: null },
@@ -98,12 +98,19 @@ export default function App() {
       .catch(() => setLoading(false))
   }, [])
 
+  const statusOrder = { active: 0, archived: 1, deprecated: 2 }
+
   const filtered = repos.filter(r => {
     const status = getStatus(r)
     if (filter !== 'all' && filter !== status) return false
     if (search && !r.name.toLowerCase().includes(search.toLowerCase()) &&
         !(r.description || '').toLowerCase().includes(search.toLowerCase())) return false
     return true
+  }).sort((a, b) => {
+    const sa = statusOrder[getStatus(a)] || 0
+    const sb = statusOrder[getStatus(b)] || 0
+    if (sa !== sb) return sa - sb
+    return new Date(b.pushed_at) - new Date(a.pushed_at)
   })
 
   const counts = {
