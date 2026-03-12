@@ -3,16 +3,27 @@ import './App.css'
 
 const GITHUB_USER = 'chubot5000'
 
-// Known Vercel mappings — add new ones here as needed
+// Static repo data — repos are private so we maintain this list manually
+const STATIC_REPOS = [
+  { name: 'usdai-landing', description: 'USD.AI protocol landing site — Next.js, SEO pages, brand kit', language: 'TypeScript', archived: false, pushed_at: '2026-03-10T00:00:00Z', stargazers_count: 0, size: 48000, html_url: 'https://github.com/chubot5000/usdai-landing' },
+  { name: 'permian-labs', description: 'Permian Labs — protocol infrastructure landing page', language: 'HTML', archived: false, pushed_at: '2026-03-12T00:00:00Z', stargazers_count: 0, size: 1200, html_url: 'https://github.com/chubot5000/permian-labs' },
+  { name: 'gpuloans-site', description: 'GPU Loans — hardware financing platform with 3D hero, 9 GPU pages, vendor ecosystem', language: 'JavaScript', archived: false, pushed_at: '2026-03-11T00:00:00Z', stargazers_count: 0, size: 22000, html_url: 'https://github.com/chubot5000/gpuloans-site' },
+  { name: 'wtgs-site', description: 'The Sleep Nebula — sleep podcast website at sleepnebula.com', language: 'HTML', archived: false, pushed_at: '2026-03-08T00:00:00Z', stargazers_count: 0, size: 3200, html_url: 'https://github.com/chubot5000/wtgs-site' },
+  { name: 'baez', description: 'Sol Practice — wellness site for Jullian Baez LCSW', language: 'JavaScript', archived: false, pushed_at: '2026-03-06T00:00:00Z', stargazers_count: 0, size: 8500, html_url: 'https://github.com/chubot5000/baez' },
+  { name: 'drive-directory', description: 'Drive Directory — searchable index of external drive folder trees', language: 'JavaScript', archived: false, pushed_at: '2026-03-05T00:00:00Z', stargazers_count: 0, size: 1800, html_url: 'https://github.com/chubot5000/drive-directory' },
+  { name: 'mb9k', description: 'Megabrand 9000 — digital AI agency landing page', language: 'JavaScript', archived: true, pushed_at: '2026-03-04T00:00:00Z', stargazers_count: 0, size: 4200, html_url: 'https://github.com/chubot5000/mb9k' },
+  { name: 'gpuloans', description: 'GPU Loans (legacy) — original Next.js site, deprecated', language: 'TypeScript', archived: true, pushed_at: '2026-03-02T00:00:00Z', stargazers_count: 0, size: 35000, html_url: 'https://github.com/chubot5000/gpuloans' },
+]
+
+// Known Vercel mappings
 const VERCEL_MAP = {
   'usdai-landing': { url: 'https://usdai-landing-main.vercel.app', domain: null },
-  'sleepnebula': { url: 'https://sleepnebula.com', domain: 'sleepnebula.com' },
+  'wtgs-site': { url: 'https://sleepnebula.com', domain: 'sleepnebula.com' },
   'baez': { url: 'https://baez-xi.vercel.app', domain: null },
   'drive-directory': { url: 'https://drive-directory.vercel.app', domain: null },
   'permian-labs': { url: 'https://permian-labs.vercel.app', domain: null },
   'gpuloans-site': { url: 'https://gpuloans-new.vercel.app', domain: null },
   'mb9k': { url: 'https://mb9k.vercel.app', domain: null },
-  'project-directory': { url: 'https://project-directory.vercel.app', domain: null },
 }
 
 const STATUS_LABELS = {
@@ -89,13 +100,9 @@ export default function App() {
   const [search, setSearch] = useState('')
 
   useEffect(() => {
-    fetch(`https://api.github.com/users/${GITHUB_USER}/repos?per_page=100&sort=pushed`)
-      .then(r => r.json())
-      .then(data => {
-        setRepos(Array.isArray(data) ? data.filter(r => !r.fork) : [])
-        setLoading(false)
-      })
-      .catch(() => setLoading(false))
+    // Using static data since repos are private
+    setRepos(STATIC_REPOS.map((r, i) => ({ ...r, id: i })))
+    setLoading(false)
   }, [])
 
   const statusOrder = { active: 0, archived: 1, deprecated: 2 }
@@ -174,7 +181,7 @@ export default function App() {
 
       <footer className="footer">
         <p>
-          <span className="footer-dot" /> Live from GitHub API
+          <span className="footer-dot" /> Private repositories
           <span className="footer-sep">·</span>
           {repos.length} repositories
           <span className="footer-sep">·</span>
